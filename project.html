@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="gl-canvas"></canvas>
+
+    <div>
+      <label for="options">Choose the Object: </label>
+      <select id="options">
+        <option value="option1">Ball</option>
+        <option value="option2">Pyramid</option>
+        <option value="option2">Cube</option>
+        <option value="option3">Dodecahedron</option>
+      </select>
+    </div>
+    <!-- <div>
+      <label for="quantity">Gravity:</label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity"
+        step="0.1"
+        min="0"
+        max="50"
+        value="10.0"
+        placeholder="0.0 - 50.0"
+      />
+    </div> -->
+
+    <script id="vertex-shader" type="x-shader/x-vertex"></script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment"></script>
+
+    <script src="initShaders.js"></script>
+    <script src="MVnew.js"></script>
+    <script src="shadedCube.js"></script>
+  </body>
+</html>
