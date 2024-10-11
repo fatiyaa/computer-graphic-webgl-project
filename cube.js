@@ -10,9 +10,9 @@ var perspectiveExample = function () {
   var colorsArray = [];
 
   var vertices = [
-    vec4(-0.1, -0.1, 0.1, 1.0),
-    vec4(-0.1, 0.1, 0.1, 1.0),
-    vec4(0.1, 0.1, 0.1, 1.0),
+    vec4(-0.1, -0.1, 0.1, 1.0), // Vertex bottom
+    vec4(-0.1, 0.1, 0.1, 1.0),  // Vertex top
+    vec4(0.1, 0.1, 0.1, 1.0), 
     vec4(0.1, -0.1, 0.1, 1.0),
     vec4(-0.1, -0.1, -0.1, 1.0),
     vec4(-0.1, 0.1, -0.1, 1.0),
@@ -121,29 +121,51 @@ var perspectiveExample = function () {
   }
 
   // Variables for controlling cube movement based on GLBB
-  var startPositionX = -0.7; // Initial position of the cube on the X axis
+  var startPositionX = -1.75; // Adjust to start near the left
+  var startPositionY = -0.65; // Cube bottom touches canvas bottom
   var speed = 0; // Initial velocity
-  var acceleration = 0; // Acceleration
+  var speedX = 0; // Velocity in X direction
+  var speedY = 0; // Velocity in Y direction
+  var launchAngle = 45; // Launch angle (θ)
+  var gravity = -9.8; // Gravity in Y direction
+  var accelerationX = 0; // Acceleration in X direction
   var timeStep = 0.005; // Time step in seconds
-  var rightLimit = 1.0; // Right boundary (WebGL normalized space)
+  var rightLimit = 2.5; // Right boundary near the right edge
+  var leftLimit = -2.5; // Left boundary for wrapping
+  var groundLevel = -0.65; // Ground level adjusted to align with cube's bottom
   var isMoving = false; // Movement status
   var time = 0; // Time tracker
 
   // Function to read input values for speed and acceleration
   function updateParameters() {
     var inputSpeed = parseFloat(document.getElementById("speedInput").value);
-    var inputAcceleration = parseFloat(
+    var inputAccelerationX = parseFloat(
       document.getElementById("accelerationInput").value
     );
+    var inputLaunchAngle = parseFloat(document.getElementById("angleInput").value);
+    var inputGravity = parseFloat(document.getElementById("gravityInput").value);
+
     if (!isNaN(inputSpeed)) {
       speed = inputSpeed;
     }
-    if (!isNaN(inputAcceleration)) {
-      acceleration = inputAcceleration;
+    if (!isNaN(inputAccelerationX)) {
+      accelerationX = inputAccelerationX;
     }
+    if (!isNaN(inputLaunchAngle)) {
+      launchAngle = inputLaunchAngle;
+    }
+    if (!isNaN(inputGravity)) {
+      gravity = inputGravity;
+    }
+
+    // Convert angle to radians and compute initial velocity components
+    var angleInRadians = (launchAngle * Math.PI) / 180;
+    speedX = speed * Math.cos(angleInRadians);
+    speedY = speed * Math.sin(angleInRadians);
   }
 
   function startAnimation() {
+    // resetAnimation();
     isMoving = true;
     time = 0; // Reset time
     updateParameters(); // Ensure the parameters are set when the animation starts
@@ -151,7 +173,8 @@ var perspectiveExample = function () {
 
   function resetAnimation() {
     isMoving = false;
-    startPositionX = -0.7; // Reset X position
+    startPositionX = -1.75; // Reset X position
+    startPositionY = -0.65; // Reset Y position
     time = 0; // Reset time
   }
 
@@ -160,22 +183,32 @@ var perspectiveExample = function () {
       // Update time
       time += timeStep;
 
-      // Calculate new position based on GLBB formula
+      // Calculate new position in X and Y based on GLBB formula
       startPositionX +=
-        speed * timeStep + 0.5 * acceleration * Math.pow(time, 2);
+        speedX * timeStep + 0.5 * accelerationX * Math.pow(time, 2);
+      startPositionY += speedY * timeStep + 0.5 * gravity * Math.pow(time, 2);
 
-      // Update velocity based on acceleration
-      speed += acceleration * timeStep;
+      // Update velocities based on acceleration and gravity
+      speedX += accelerationX * timeStep;
+      speedY += gravity * timeStep;
 
-      // Stop the cube if it reaches the right boundary
+      // Ensure cube wraps around horizontally when it crosses canvas boundaries
       if (startPositionX >= rightLimit) {
-        startPositionX = rightLimit;
-        isMoving = false;
+        startPositionX = leftLimit; // Wrap to left side
+      } else if (startPositionX < leftLimit) {
+        startPositionX = rightLimit; // Wrap to right side
+      }
+
+      // Stop the cube if it hits the ground level (y = -0.65)
+      if (startPositionY <= groundLevel) {
+        startPositionY = groundLevel;
+        speedY = 0; // Stop vertical movement
+        isMoving = false; // Stop the animation when it hits the ground
       }
     }
 
-    // Create translation matrix for moving the cube
-    var translationMatrix = translate(startPositionX, 0.0, 0.0); // Move in X axis
+    // Create translation matrix for moving the cube in both X and Y axes
+    var translationMatrix = translate(startPositionX, startPositionY, 0.0); // Move in X and Y axis
     return translationMatrix;
   }
 

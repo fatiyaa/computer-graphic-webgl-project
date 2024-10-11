@@ -1,31 +1,102 @@
-#gl-canvas {
-    border: 2px solid #000; /* Ganti #000 dengan warna bingkai yang diinginkan */
-    border-radius: 8px; /* Opsional: Membuat sudut bingkai sedikit melengkung */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+
+/* Atur body dan HTML agar tidak memiliki margin dan padding */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column; /* Mengatur elemen secara vertikal */
+  align-items: center; /* Center-kan elemen secara horizontal */
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
-select {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600; /* Menggunakan font dengan berat 600 untuk heading */
+}
+
+p,
+label,
+input,
+button {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400; /* Berat normal untuk teks biasa */
+}
+
+/* Styling untuk canvas */
+#gl-canvas {
+  border: 2px solid #000; /* Border warna hitam */
+  border-radius: 8px; /* Membuat sudut bingkai kanvas melengkung */
+  width: 95%; /* Sesuaikan lebar kanvas dengan viewport */
+  height: 60vh; /* Sesuaikan tinggi kanvas dengan viewport */
+  display: block;
+  margin-top: 20px; /* Jarak dari atas */
+}
+
+/* Grid untuk 4 kolom di bawah kanvas */
+.grid-container {
+  display: grid;
+  width: 95%; /* Sesuaikan lebar grid dengan lebar kanvas */
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* Membuat 4 kolom */
+  gap: 20px; /* Jarak antar kolom */
+  margin-top: 20px; /* Jarak antara kanvas dan grid */
+}
+
+/* Styling umum untuk grid item */
+.grid-item {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Kolom 3: Styling khusus untuk kontrol */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Jarak antar elemen kontrol */
+}
+
+/* Styling untuk input dan tombol */
+label {
+  font-size: 14px;
+  margin-bottom: 5px;
 }
 
 input[type="number"] {
-    padding: 10px;
-    font-size: 16px;
-    width: 120px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 16px;
+  width: 90%; /* Lebar penuh di dalam kolom */
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
-body, html {
-    margin: 100;
-    padding: 100;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
-canvas {
-    display: block;
-    width: 99%;
-    height: 80%;
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.center-text {
+  text-align: center; /* Teks dalam elemen ini akan di-center */
+  font-size: 36px; /* Ukuran font lebih besar */
+  margin: 20px 0; /* Memberikan sedikit margin atas dan bawah */
 }

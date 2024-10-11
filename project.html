@@ -1,60 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
+    <title>WebGL Canvas with 4 Columns</title>
   </head>
   <body>
+
+    <!-- Kanvas WebGL -->
     <canvas id="gl-canvas"></canvas>
 
-    <label for="speedInput">Initial Speed (v0):</label>
-    <input
-      type="number"
-      id="speedInput"
-      value="0.05"
-      step="0.01"
-      onchange="updateParameters()"
-    />
+    <!-- Grid dengan 4 kolom di bawah kanvas -->
+    <div class="grid-container">
+      <div class="grid-item"></div> <!-- Kolom 1 kosong -->
+      <div class="grid-item"></div> <!-- Kolom 2 kosong -->
+      
+      <!-- Kolom 3: Kontrol input dan tombol -->
+      <div class="grid-item controls">
+        <h1 class="center-text">PARABOLA</h1>
+        <button id="startButton">Start</button>
+        <button id="resetButton">Reset</button>
+        <label for="speedInput">Initial Speed X (v0x):</label>
+        <input
+          type="number"
+          id="speedInput"
+          value="10"
+          step="0.01"
+          onchange="updateParameters()"
+        />
 
-    <label for="accelerationInput">Acceleration (a):</label>
-    <input
-      type="number"
-      id="accelerationInput"
-      value="0"
-      step="0.01"
-      onchange="updateParameters()"
-    />
+        <label for="speedYInput">Initial Speed Y (v0y):</label>
+        <input
+          type="number"
+          id="speedYInput"
+          value="10"
+          step="0.01"
+          onchange="updateParameters()"
+        />
 
-    <button id="startButton">Start</button>
-    <button id="resetButton">Reset</button>
+        <label for="accelerationInput">Acceleration X (a):</label>
+        <input
+          type="number"
+          id="accelerationInput"
+          value="1"
+          step="0.01"
+          onchange="updateParameters()"
+        />
 
-    <!-- <div>
-      <label for="options">Choose the Object: </label>
-      <select id="options">
-        <option value="option1">Ball</option>
-        <option value="option2">Pyramid</option>
-        <option value="option2">Cube</option>
-        <option value="option3">Dodecahedron</option>
-      </select>
-    </div> -->
-    <!-- <div>
-      <label for="quantity">Gravity:</label>
-      <input
-        type="number"
-        id="quantity"
-        name="quantity"
-        step="0.1"
-        min="0"
-        max="50"
-        value="10.0"
-        placeholder="0.0 - 50.0"
-      />
-    </div> -->
+        <label for="gravityInput">Gravity (g):</label>
+        <input
+          type="number"
+          id="gravityInput"
+          value="-9.8"
+          step="0.1"
+          onchange="updateParameters()"
+        />
 
+        <label for="angleInput">Launch Angle (θ in degrees):</label>
+        <input
+          type="number"
+          id="angleInput"
+          value="45"
+          step="1"
+          onchange="updateParameters()"
+        />
+
+      </div>
+
+      <div class="grid-item"></div> <!-- Kolom 4 kosong -->
+    </div>
+
+    <!-- Shader for WebGL -->
     <script id="vertex-shader" type="x-shader/x-vertex">
       #version 300 es
-
-      in  vec4 aPosition;
-      in  vec4 aColor;
+      in vec4 aPosition;
+      in vec4 aColor;
       out vec4 vColor;
 
       uniform mat4 uModelViewMatrix;
@@ -62,27 +83,27 @@
 
       void main()
       {
-          gl_Position = uProjectionMatrix*uModelViewMatrix*aPosition;
+          gl_Position = uProjectionMatrix * uModelViewMatrix * aPosition;
           vColor = aColor;
       }
     </script>
 
     <script id="fragment-shader" type="x-shader/x-fragment">
       #version 300 es
-
       precision mediump float;
 
       in vec4 vColor;
       out vec4 fColor;
 
-      void
-      main()
+      void main()
       {
           fColor = vColor;
       }
     </script>
+
     <script src="initShaders.js"></script>
     <script src="MVnew.js"></script>
     <script src="cube.js"></script>
+
   </body>
 </html>
