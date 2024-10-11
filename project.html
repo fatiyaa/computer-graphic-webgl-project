@@ -6,11 +6,27 @@
   <body>
     <canvas id="gl-canvas"></canvas>
 
-    <br>
-    <div>
-      <button id="startButton">Start</button>
-      <button id="resetButton">Reset</button>
-    </div>
+    <label for="speedInput">Initial Speed (v0):</label>
+    <input
+      type="number"
+      id="speedInput"
+      value="0.05"
+      step="0.01"
+      onchange="updateParameters()"
+    />
+
+    <label for="accelerationInput">Acceleration (a):</label>
+    <input
+      type="number"
+      id="accelerationInput"
+      value="0"
+      step="0.01"
+      onchange="updateParameters()"
+    />
+
+    <button id="startButton">Start</button>
+    <button id="resetButton">Reset</button>
+
     <!-- <div>
       <label for="options">Choose the Object: </label>
       <select id="options">
@@ -36,35 +52,35 @@
 
     <script id="vertex-shader" type="x-shader/x-vertex">
       #version 300 es
-      
+
       in  vec4 aPosition;
       in  vec4 aColor;
       out vec4 vColor;
-      
+
       uniform mat4 uModelViewMatrix;
       uniform mat4 uProjectionMatrix;
-      
+
       void main()
       {
           gl_Position = uProjectionMatrix*uModelViewMatrix*aPosition;
           vColor = aColor;
       }
-      </script>
-      
-      <script id="fragment-shader" type="x-shader/x-fragment">
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
       #version 300 es
-      
+
       precision mediump float;
-      
+
       in vec4 vColor;
       out vec4 fColor;
-      
+
       void
       main()
       {
           fColor = vColor;
       }
-      </script>
+    </script>
     <script src="initShaders.js"></script>
     <script src="MVnew.js"></script>
     <script src="cube.js"></script>
