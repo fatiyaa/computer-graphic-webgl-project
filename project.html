@@ -6,7 +6,7 @@
   <body>
     <canvas id="gl-canvas"></canvas>
 
-    <div>
+    <!-- <div>
       <label for="options">Choose the Object: </label>
       <select id="options">
         <option value="option1">Ball</option>
@@ -14,7 +14,7 @@
         <option value="option2">Cube</option>
         <option value="option3">Dodecahedron</option>
       </select>
-    </div>
+    </div> -->
     <!-- <div>
       <label for="quantity">Gravity:</label>
       <input
@@ -29,12 +29,39 @@
       />
     </div> -->
 
-    <script id="vertex-shader" type="x-shader/x-vertex"></script>
-
-    <script id="fragment-shader" type="x-shader/x-fragment"></script>
-
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      #version 300 es
+      
+      in  vec4 aPosition;
+      in  vec4 aColor;
+      out vec4 vColor;
+      
+      uniform mat4 uModelViewMatrix;
+      uniform mat4 uProjectionMatrix;
+      
+      void main()
+      {
+          gl_Position = uProjectionMatrix*uModelViewMatrix*aPosition;
+          vColor = aColor;
+      }
+      </script>
+      
+      <script id="fragment-shader" type="x-shader/x-fragment">
+      #version 300 es
+      
+      precision mediump float;
+      
+      in vec4 vColor;
+      out vec4 fColor;
+      
+      void
+      main()
+      {
+          fColor = vColor;
+      }
+      </script>
     <script src="initShaders.js"></script>
     <script src="MVnew.js"></script>
-    <script src="shadedCube.js"></script>
+    <script src="cube.js"></script>
   </body>
 </html>
