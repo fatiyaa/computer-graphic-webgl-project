@@ -152,6 +152,7 @@ var perspectiveExample = function () {
   // Function to read input values for speed and acceleration
   function updateParameters() {
     var inputSpeed = parseFloat(document.getElementById("speedInput").value);
+    var inputSpeedY = parseFloat(document.getElementById("speedYInput").value);
     var inputAccelerationX = parseFloat(
       document.getElementById("accelerationInput").value
     );
@@ -163,6 +164,12 @@ var perspectiveExample = function () {
 
     if (!isNaN(inputSpeed)) {
       speed = inputSpeed;
+    }
+    if (!isNaN(inputSpeedY)) {   // Add this block to handle speedYInput
+      speedY = inputSpeedY;
+    } else {
+      var angleInRadians = (launchAngle * Math.PI) / 180;
+      speedY = speed * Math.sin(angleInRadians);
     }
     if (!isNaN(inputAccelerationX)) {
       accelerationX = inputAccelerationX;
@@ -186,7 +193,6 @@ var perspectiveExample = function () {
     // Convert angle to radians and compute initial velocity components
     var angleInRadians = (launchAngle * Math.PI) / 180;
     speedX = speed * Math.cos(angleInRadians);
-    speedY = speed * Math.sin(angleInRadians);
   }
 
   function startParabola() {
