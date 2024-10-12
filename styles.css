@@ -99,4 +99,5 @@ button:hover {
   text-align: center; /* Teks dalam elemen ini akan di-center */
   font-size: 36px; /* Ukuran font lebih besar */
   margin: 20px 0; /* Memberikan sedikit margin atas dan bawah */
+  cursor: pointer;
 }

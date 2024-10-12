@@ -13,14 +13,26 @@
 
     <!-- Grid dengan 4 kolom di bawah kanvas -->
     <div class="grid-container">
-      <div class="grid-item"></div> <!-- Kolom 1 kosong -->
+      <div class="grid-item controls">
+        <h1 class="center-text" id="freeFall">GERAK JATUH BEBAS</h1>
+        <button id="startFreeFall">Start</button>
+        <button id="resetFreeFall">Reset</button>
+        <label for="gravityInput">Gravity (g):</label>
+        <input
+          type="number"
+          id="gravityInput"
+          value="-9.8"
+          step="0.1"
+          onchange="updateParameters()"
+        />
+      </div> <!-- Kolom 1 kosong -->
       <div class="grid-item"></div> <!-- Kolom 2 kosong -->
       
       <!-- Kolom 3: Kontrol input dan tombol -->
       <div class="grid-item controls">
-        <h1 class="center-text">PARABOLA</h1>
-        <button id="startButton">Start</button>
-        <button id="resetButton">Reset</button>
+        <h1 class="center-text" id="parabola">PARABOLA</h1>
+        <button id="startParabola">Start</button>
+        <button id="resetParabola">Reset</button>
         <label for="speedInput">Initial Speed X (v0x):</label>
         <input
           type="number"
@@ -68,7 +80,37 @@
 
       </div>
 
-      <div class="grid-item"></div> <!-- Kolom 4 kosong -->
+      <div class="grid-item controls">
+        <h1 class="center-text" id="circular">GMB & GMBB</h1>
+        <button id="startCircular">Start</button>
+        <button id="resetCircular">Reset</button>
+        <label for="angularVelInput">Initial Angular Velocity (ω0):</label>
+        <input
+          type="number"
+          id="angularVelInput"
+          value="10"
+          step="0.01"
+          onchange="updateParameters()"
+        />
+
+        <label for="angularAccelInput">Angular Acceleration (α):</label>
+        <input
+          type="number"
+          id="angularAccelInput"
+          value="10"
+          step="0.01"
+          onchange="updateParameters()"
+        />
+
+        <label for="radiusInput">Radius (r):</label>
+        <input
+          type="number"
+          id="radiusInput"
+          value="0.4"
+          step="0.1"
+          onchange="updateParameters()"
+        />
+      </div> <!-- Kolom 4 kosong -->
     </div>
 
     <!-- Shader for WebGL -->

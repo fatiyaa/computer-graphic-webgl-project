@@ -114,8 +114,17 @@ var perspectiveExample = function () {
     projectionMatrixLoc = gl.getUniformLocation(program, "uProjectionMatrix");
 
     // Add event listeners for buttons
-    document.getElementById("startButton").onclick = startAnimation;
-    document.getElementById("resetButton").onclick = resetAnimation;
+    document.getElementById("parabola").onclick = resetParabola;
+    document.getElementById("startParabola").onclick = startParabola;
+    document.getElementById("resetParabola").onclick = resetParabola;
+
+    document.getElementById("freeFall").onclick = resetFreeFall;
+    document.getElementById("startFreeFall").onclick = startFreeFall;
+    document.getElementById("resetFreeFall").onclick = resetFreeFall;
+
+    document.getElementById("circular").onclick = resetCircular;
+    document.getElementById("startCircular").onclick = startCircular;
+    document.getElementById("resetCircular").onclick = resetCircular;
 
     render();
   }
@@ -133,7 +142,11 @@ var perspectiveExample = function () {
   var rightLimit = 2.5; // Right boundary near the right edge
   var leftLimit = -2.5; // Left boundary for wrapping
   var groundLevel = -0.65; // Ground level adjusted to align with cube's bottom
-  var isMoving = false; // Movement status
+  var angularPosition = 0; // Current angular position in radians
+  var angularVelocity = 0; // Initial angular velocity
+  var angularAcceleration = 0; // Angular acceleration in radians per second squared
+  var radiusCircular = 0.01; // Radius of the circular path
+  var isMovingParabola = false, isMovingFreeFall = false, isMovingCircular = false; // Movement status
   var time = 0; // Time tracker
 
   // Function to read input values for speed and acceleration
@@ -144,6 +157,9 @@ var perspectiveExample = function () {
     );
     var inputLaunchAngle = parseFloat(document.getElementById("angleInput").value);
     var inputGravity = parseFloat(document.getElementById("gravityInput").value);
+    var inputAngVel = parseFloat(document.getElementById("angularVelInput").value);
+    var inputAngAccel = parseFloat(document.getElementById("angularAccelInput").value);
+    var inputRadius = parseFloat(document.getElementById("radiusInput").value);
 
     if (!isNaN(inputSpeed)) {
       speed = inputSpeed;
@@ -157,6 +173,15 @@ var perspectiveExample = function () {
     if (!isNaN(inputGravity)) {
       gravity = inputGravity;
     }
+    if (!isNaN(inputAngVel)) {
+      angularVelocity = inputAngVel;
+    }
+    if (!isNaN(inputAngAccel)) {
+      angularAcceleration = inputAngAccel;
+    }
+    if (!isNaN(inputRadius)) {
+      radiusCircular = inputRadius;
+    }
 
     // Convert angle to radians and compute initial velocity components
     var angleInRadians = (launchAngle * Math.PI) / 180;
@@ -164,22 +189,50 @@ var perspectiveExample = function () {
     speedY = speed * Math.sin(angleInRadians);
   }
 
-  function startAnimation() {
-    // resetAnimation();
-    isMoving = true;
+  function startParabola() {
+    // resetParabola();
+    isMovingParabola = true;
     time = 0; // Reset time
     updateParameters(); // Ensure the parameters are set when the animation starts
   }
 
-  function resetAnimation() {
-    isMoving = false;
+  function resetParabola() {
+    isMovingParabola = false;
     startPositionX = -1.75; // Reset X position
     startPositionY = -0.65; // Reset Y position
     time = 0; // Reset time
   }
 
+  function startCircular() {
+    // resetParabola();
+    isMovingCircular = true;
+    time = 0; // Reset time
+    updateParameters(); // Ensure the parameters are set when the animation starts
+  }
+
+  function resetCircular() {
+    isMovingCircular = false;
+    startPositionX = 0; // Reset X position
+    startPositionY = 0; // Reset Y position
+    time = 0; // Reset time
+  }
+
+  function startFreeFall() {
+    // resetParabola();
+    isMovingFreeFall = true;
+    updateParameters(); // Ensure the parameters are set when the animation starts
+    speed = 0; // Reset time
+  }
+
+  function resetFreeFall() {
+    isMovingFreeFall = false;
+    startPositionX = -1.5; // Reset X position
+    startPositionY = 0.65; // Reset Y position
+    speed = 0; // Reset time
+  }
+
   function updateCubePosition() {
-    if (isMoving) {
+    if (isMovingParabola) {
       // Update time
       time += timeStep;
 
@@ -203,8 +256,37 @@ var perspectiveExample = function () {
       if (startPositionY <= groundLevel) {
         startPositionY = groundLevel;
         speedY = 0; // Stop vertical movement
-        isMoving = false; // Stop the animation when it hits the ground
+        isMovingParabola = false; // Stop the animation when it hits the ground
       }
+    } 
+    else if (isMovingFreeFall) {
+      // Perbarui kecepatan berdasarkan gravitasi
+      speed += gravity * timeStep;
+
+      // Perbarui posisi Y berdasarkan kecepatan
+      startPositionY += speed * timeStep;
+
+      // Periksa apakah kubus sudah mencapai batas bawah
+      if (startPositionY <= groundLevel) {
+        // Set posisi di batas bawah dan hentikan pergerakan
+        startPositionY = groundLevel;
+        speed = 0;
+        isMovingFreeFall = false; // Hentikan pergerakan
+      }
+    }
+    else if (isMovingCircular) {
+      // Update time
+      time += timeStep;
+
+      // Update angular velocity based on angular acceleration
+      angularVelocity += angularAcceleration * timeStep;
+
+      // Update angular position based on angular velocity
+      angularPosition += angularVelocity * timeStep;
+
+      // Convert polar coordinates (circular motion) to Cartesian coordinates
+      startPositionX = radiusCircular * Math.cos(angularPosition);
+      startPositionY = radiusCircular * Math.sin(angularPosition);
     }
 
     // Create translation matrix for moving the cube in both X and Y axes
