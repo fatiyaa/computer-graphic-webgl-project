@@ -9,6 +9,9 @@ var perspectiveExample = function () {
   var positionsArray = [];
   var colorsArray = [];
 
+  const A = ((1 + Math.sqrt(5)) / 2); // The golden ratio
+  const B = (1 / A);
+
   var vertices = [
     vec4(-0.1, -0.1, 0.1, 1.0), // Vertex bottom
     vec4(-0.1, 0.1, 0.1, 1.0),  // Vertex top
@@ -20,6 +23,29 @@ var perspectiveExample = function () {
     vec4(0.1, -0.1, -0.1, 1.0),
   ];
 
+  var dodeVertices = [
+    vec4(0.1, 0.1, 0.1, 1.0),
+    vec4(0.1, 0.1, -0.1, 1.0),
+    vec4(0.1, -0.1, 0.1, 1.0),
+    vec4(0.1, -0.1, -0.1, 1.0),
+    vec4(-0.1, 0.1, 0.1, 1.0),
+    vec4(-0.1, 0.1, -0.1, 1.0),
+    vec4(-0.1, -0.1, 0.1, 1.0),
+    vec4(-0.1, -0.1, -0.1, 1.0),
+    vec4(0, B/10, A/10, 1.0),
+    vec4(0, B/10, -A/10, 1.0),
+    vec4(0, -B/10, A/10, 1.0),
+    vec4(0, -B/10, -A/10, 1.0),
+    vec4(B/10, A/10, 0, 1.0),
+    vec4(B/10, -A/10, 0, 1.0),
+    vec4(-B/10, A/10, 0, 1.0),
+    vec4(-B/10, -A/10, 0, 1.0),
+    vec4(A/10, 0, B/10, 1.0),
+    vec4(A/10, 0, -B/10, 1.0),
+    vec4(-A/10, 0, B/10, 1.0),
+    vec4(-A/10, 0, -B/10, 1.0)
+  ];
+
   var vertexColors = [
     vec4(0.0, 0.0, 0.0, 1.0), // black
     vec4(1.0, 0.0, 0.0, 1.0), // red
@@ -29,6 +55,21 @@ var perspectiveExample = function () {
     vec4(1.0, 0.0, 1.0, 1.0), // magenta
     vec4(0.0, 1.0, 1.0, 1.0), // cyan
     vec4(1.0, 1.0, 1.0, 1.0), // white
+  ];
+
+  var dodeVertexColors = [
+    vec4(0.0, 0.0, 0.0, 1.0),  // black
+    vec4(1.0, 0.0, 0.0, 1.0),  // red
+    vec4(1.0, 1.0, 0.0, 1.0),  // yellow
+    vec4(0.0, 1.0, 0.0, 1.0),  // green
+    vec4(0.0, 0.0, 1.0, 1.0),  // blue
+    vec4(1.0, 0.0, 1.0, 1.0),  // magenta
+    vec4(0.0, 1.0, 1.0, 1.0),  // cyan
+    vec4(0.5, 0.5, 0.5, 1.0),  // grey
+    vec4(0.5, 0.0, 0.0, 1.0),  // half red
+    vec4(0.5, 0.5, 0.0, 1.0),  // yellow 2
+    vec4(0.0, 0.5, 0.0, 1.0),  // green 2
+    vec4(0.0, 0.0, 0.5, 1.0),  // blue 2
   ];
 
   var near = 0.1;
@@ -47,6 +88,8 @@ var perspectiveExample = function () {
   const at = vec3(0.0, 0.0, 0.0);
   const up = vec3(0.0, 1.0, 0.0);
 
+  var currentObject = "cube";
+
   function quad(a, b, c, d) {
     positionsArray.push(vertices[a]);
     colorsArray.push(vertexColors[a]);
@@ -62,6 +105,30 @@ var perspectiveExample = function () {
     colorsArray.push(vertexColors[a]);
   }
 
+  function pentagon(a, b, c, d, e, colorIndex) {
+    // Pecah pentagon menjadi 3 segitiga untuk membentuk fan
+    positionsArray.push(dodeVertices[a]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+    positionsArray.push(dodeVertices[b]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+    positionsArray.push(dodeVertices[c]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+
+    positionsArray.push(dodeVertices[a]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+    positionsArray.push(dodeVertices[c]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+    positionsArray.push(dodeVertices[d]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+
+    positionsArray.push(dodeVertices[a]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+    positionsArray.push(dodeVertices[d]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+    positionsArray.push(dodeVertices[e]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+  }
+
   function colorCube() {
     quad(1, 0, 3, 2);
     quad(2, 3, 7, 6);
@@ -69,6 +136,22 @@ var perspectiveExample = function () {
     quad(6, 5, 1, 2);
     quad(4, 5, 6, 7);
     quad(5, 4, 0, 1);
+  }
+
+  function colorDodecahedron() {
+    pentagon(0, 8, 10, 2, 16, 0);  // black
+    pentagon(0, 8, 4, 14, 12, 1); // red
+    pentagon(0, 12, 1, 17, 16, 2);  // yellow
+    pentagon(1, 12, 14, 5, 9, 3);  // green
+    pentagon(4, 8, 10, 6, 18, 4); // blue 7
+    pentagon(5, 14, 4, 18, 19, 5);   // magenta
+    pentagon(15, 13, 2, 10, 6, 6); // cyan
+    pentagon(3, 11, 7, 15, 13, 7); // grey
+    pentagon(1, 9, 11, 3, 17, 8); // half red
+    pentagon(6, 15, 7, 19, 18, 9); // ywllow 2
+    pentagon(2, 16, 17, 3, 13, 10); // green 2
+    pentagon(7, 11, 9, 5, 19, 11); // blue`2
+    // 3, 17, 16, 2, 13 green sbelah cyan
   }
 
   function init() {
@@ -92,7 +175,12 @@ var perspectiveExample = function () {
     var program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
 
-    colorCube();
+    // colorCube();
+    if (currentObject === "cube") {
+      colorCube();
+    } else if (currentObject === "dodecahedron") {
+      colorDodecahedron();
+    }
 
     var cBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
@@ -114,6 +202,23 @@ var perspectiveExample = function () {
     projectionMatrixLoc = gl.getUniformLocation(program, "uProjectionMatrix");
 
     // Add event listeners for buttons
+    document.getElementById("cubeButton").onclick = function () {
+      currentObject = "cube";
+      positionsArray = []; // Clear positions and colors
+      colorsArray = [];
+      numPositions = 36;
+
+      init(); // Re-initialize with cube
+    };
+    document.getElementById("dodecahedronButton").onclick = function () {
+      currentObject = "dodecahedron";
+      positionsArray = []; // Clear positions and colors
+      colorsArray = [];
+      numPositions = 108;
+      
+      init(); // Re-initialize with dodecahedron
+    };
+
     document.getElementById("parabola").onclick = resetParabola;
     document.getElementById("startParabola").onclick = startParabola;
     document.getElementById("resetParabola").onclick = resetParabola;
@@ -130,8 +235,8 @@ var perspectiveExample = function () {
   }
 
   // Variables for controlling cube movement based on GLBB
-  var startPositionX = -1.75; // Adjust to start near the left
-  var startPositionY = -0.65; // Cube bottom touches canvas bottom
+  var startPositionX = -0; // Adjust to start near the left
+  var startPositionY = -0; // Cube bottom touches canvas bottom
   var speed = 0; // Initial velocity
   var speedX = 0; // Velocity in X direction
   var speedY = 0; // Velocity in Y direction
