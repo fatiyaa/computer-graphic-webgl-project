@@ -79,8 +79,11 @@ var main = function () {
   var phi = 0.0;
   var dr = (5.0 * Math.PI) / 180.0;
 
-  var fovy = 45.0;
+  var fovy = 45.0; // Field of view in the y-direction
   var aspect;
+
+  var cameraSpeed = 0.05;
+  var fovSpeed = 1.0;
 
   var modelViewMatrixLoc, projectionMatrixLoc;
   var modelViewMatrix, projectionMatrix;
@@ -154,18 +157,6 @@ var main = function () {
     // 3, 17, 16, 2, 13 green sbelah cyan
   }
 
-  function resize() {
-    var realWidth = canvas.clientWidth;
-    var realHeight = canvas.clientHeight;
-    var pixelRatio = window.devicePixelRatio || 1;
-    canvas.width = realWidth * pixelRatio;
-    canvas.height = realHeight * pixelRatio;
-
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    aspect = canvas.width / canvas.height;
-    projectionMatrix = perspective(fovy, aspect, near, far);
-  }
-
   function init() {
     canvas = document.getElementById("gl-canvas");
 
@@ -213,6 +204,8 @@ var main = function () {
     modelViewMatrixLoc = gl.getUniformLocation(program, "uModelViewMatrix");
     projectionMatrixLoc = gl.getUniformLocation(program, "uProjectionMatrix");
 
+    window.addEventListener("keydown", handleKeyDown);
+
     // Add event listeners for buttons
     document.getElementById("cubeButton").onclick = function () {
       currentObject = "cube";
@@ -248,6 +241,35 @@ var main = function () {
     document.getElementById("resetGLBB").onclick = resetGLBB;
 
     render();
+  }
+
+  function handleKeyDown(event) {
+    switch (event.key) {
+      case "w": // Move camera closer
+        radius -= cameraSpeed;
+        break;
+      case "s": // Move camera further
+        radius += cameraSpeed;
+        break;
+      case "a": // Rotate camera left
+        theta -= cameraSpeed;
+        break;
+      case "d": // Rotate camera right
+        theta += cameraSpeed;
+        break;
+      case "q": // Rotate camera up
+        phi -= cameraSpeed;
+        break;
+      case "e": // Rotate camera down
+        phi += cameraSpeed;
+        break;
+      case "z": // Zoom in (decrease FOV)
+        fovy = Math.max(10.0, fovy - fovSpeed);
+        break;
+      case "x": // Zoom out (increase FOV)
+        fovy = Math.min(90.0, fovy + fovSpeed);
+        break;
+    }
   }
 
   // Variables for controlling cube movement based on GLBB

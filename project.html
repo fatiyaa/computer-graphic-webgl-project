@@ -142,6 +142,22 @@
         />
       </div>
     </div>
+    <div
+      style="
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: 3rem;
+      "
+    >
+      <p>W = Move camera closer</p>
+      <p>S = Move camera further</p>
+      <p>A = Rotate camera left</p>
+      <p>D = Rotate camera right</p>
+      <p>Q = Rotate camera up</p>
+      <p>E = Rotate camera down</p>
+      <p>Z = Zoom in (decrease FOV)</p>
+      <p>X = Zoom out (increase FOV)</p>
+    </div>
 
     <!-- Shader for WebGL -->
     <script id="vertex-shader" type="x-shader/x-vertex">
