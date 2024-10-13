@@ -1,6 +1,6 @@
 "use strict";
 
-var perspectiveExample = function () {
+var main = function () {
   var canvas;
   var gl;
 
@@ -9,13 +9,13 @@ var perspectiveExample = function () {
   var positionsArray = [];
   var colorsArray = [];
 
-  const A = ((1 + Math.sqrt(5)) / 2); // The golden ratio
-  const B = (1 / A);
+  const A = (1 + Math.sqrt(5)) / 2; // The golden ratio
+  const B = 1 / A;
 
   var vertices = [
     vec4(-0.1, -0.1, 0.1, 1.0), // Vertex bottom
-    vec4(-0.1, 0.1, 0.1, 1.0),  // Vertex top
-    vec4(0.1, 0.1, 0.1, 1.0), 
+    vec4(-0.1, 0.1, 0.1, 1.0), // Vertex top
+    vec4(0.1, 0.1, 0.1, 1.0),
     vec4(0.1, -0.1, 0.1, 1.0),
     vec4(-0.1, -0.1, -0.1, 1.0),
     vec4(-0.1, 0.1, -0.1, 1.0),
@@ -32,18 +32,18 @@ var perspectiveExample = function () {
     vec4(-0.1, 0.1, -0.1, 1.0),
     vec4(-0.1, -0.1, 0.1, 1.0),
     vec4(-0.1, -0.1, -0.1, 1.0),
-    vec4(0, B/10, A/10, 1.0),
-    vec4(0, B/10, -A/10, 1.0),
-    vec4(0, -B/10, A/10, 1.0),
-    vec4(0, -B/10, -A/10, 1.0),
-    vec4(B/10, A/10, 0, 1.0),
-    vec4(B/10, -A/10, 0, 1.0),
-    vec4(-B/10, A/10, 0, 1.0),
-    vec4(-B/10, -A/10, 0, 1.0),
-    vec4(A/10, 0, B/10, 1.0),
-    vec4(A/10, 0, -B/10, 1.0),
-    vec4(-A/10, 0, B/10, 1.0),
-    vec4(-A/10, 0, -B/10, 1.0)
+    vec4(0, B / 10, A / 10, 1.0),
+    vec4(0, B / 10, -A / 10, 1.0),
+    vec4(0, -B / 10, A / 10, 1.0),
+    vec4(0, -B / 10, -A / 10, 1.0),
+    vec4(B / 10, A / 10, 0, 1.0),
+    vec4(B / 10, -A / 10, 0, 1.0),
+    vec4(-B / 10, A / 10, 0, 1.0),
+    vec4(-B / 10, -A / 10, 0, 1.0),
+    vec4(A / 10, 0, B / 10, 1.0),
+    vec4(A / 10, 0, -B / 10, 1.0),
+    vec4(-A / 10, 0, B / 10, 1.0),
+    vec4(-A / 10, 0, -B / 10, 1.0),
   ];
 
   var vertexColors = [
@@ -58,18 +58,18 @@ var perspectiveExample = function () {
   ];
 
   var dodeVertexColors = [
-    vec4(0.0, 0.0, 0.0, 1.0),  // black
-    vec4(1.0, 0.0, 0.0, 1.0),  // red
-    vec4(1.0, 1.0, 0.0, 1.0),  // yellow
-    vec4(0.0, 1.0, 0.0, 1.0),  // green
-    vec4(0.0, 0.0, 1.0, 1.0),  // blue
-    vec4(1.0, 0.0, 1.0, 1.0),  // magenta
-    vec4(0.0, 1.0, 1.0, 1.0),  // cyan
-    vec4(0.5, 0.5, 0.5, 1.0),  // grey
-    vec4(0.5, 0.0, 0.0, 1.0),  // half red
-    vec4(0.5, 0.5, 0.0, 1.0),  // yellow 2
-    vec4(0.0, 0.5, 0.0, 1.0),  // green 2
-    vec4(0.0, 0.0, 0.5, 1.0),  // blue 2
+    vec4(0.0, 0.0, 0.0, 1.0), // black
+    vec4(1.0, 0.0, 0.0, 1.0), // red
+    vec4(1.0, 1.0, 0.0, 1.0), // yellow
+    vec4(0.0, 1.0, 0.0, 1.0), // green
+    vec4(0.0, 0.0, 1.0, 1.0), // blue
+    vec4(1.0, 0.0, 1.0, 1.0), // magenta
+    vec4(0.0, 1.0, 1.0, 1.0), // cyan
+    vec4(0.5, 0.5, 0.5, 1.0), // grey
+    vec4(0.5, 0.0, 0.0, 1.0), // half red
+    vec4(0.5, 0.5, 0.0, 1.0), // yellow 2
+    vec4(0.0, 0.5, 0.0, 1.0), // green 2
+    vec4(0.0, 0.0, 0.5, 1.0), // blue 2
   ];
 
   var near = 0.1;
@@ -139,12 +139,12 @@ var perspectiveExample = function () {
   }
 
   function colorDodecahedron() {
-    pentagon(0, 8, 10, 2, 16, 0);  // black
+    pentagon(0, 8, 10, 2, 16, 0); // black
     pentagon(0, 8, 4, 14, 12, 1); // red
-    pentagon(0, 12, 1, 17, 16, 2);  // yellow
-    pentagon(1, 12, 14, 5, 9, 3);  // green
+    pentagon(0, 12, 1, 17, 16, 2); // yellow
+    pentagon(1, 12, 14, 5, 9, 3); // green
     pentagon(4, 8, 10, 6, 18, 4); // blue 7
-    pentagon(5, 14, 4, 18, 19, 5);   // magenta
+    pentagon(5, 14, 4, 18, 19, 5); // magenta
     pentagon(15, 13, 2, 10, 6, 6); // cyan
     pentagon(3, 11, 7, 15, 13, 7); // grey
     pentagon(1, 9, 11, 3, 17, 8); // half red
@@ -152,6 +152,18 @@ var perspectiveExample = function () {
     pentagon(2, 16, 17, 3, 13, 10); // green 2
     pentagon(7, 11, 9, 5, 19, 11); // blue`2
     // 3, 17, 16, 2, 13 green sbelah cyan
+  }
+
+  function resize() {
+    var realWidth = canvas.clientWidth;
+    var realHeight = canvas.clientHeight;
+    var pixelRatio = window.devicePixelRatio || 1;
+    canvas.width = realWidth * pixelRatio;
+    canvas.height = realHeight * pixelRatio;
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    aspect = canvas.width / canvas.height;
+    projectionMatrix = perspective(fovy, aspect, near, far);
   }
 
   function init() {
@@ -215,7 +227,7 @@ var perspectiveExample = function () {
       positionsArray = []; // Clear positions and colors
       colorsArray = [];
       numPositions = 108;
-      
+
       init(); // Re-initialize with dodecahedron
     };
 
@@ -230,6 +242,10 @@ var perspectiveExample = function () {
     document.getElementById("circular").onclick = resetCircular;
     document.getElementById("startCircular").onclick = startCircular;
     document.getElementById("resetCircular").onclick = resetCircular;
+
+    document.getElementById("GLBB").onclick = resetGLBB;
+    document.getElementById("startGLBB").onclick = startGLBB;
+    document.getElementById("resetGLBB").onclick = resetGLBB;
 
     render();
   }
@@ -251,7 +267,10 @@ var perspectiveExample = function () {
   var angularVelocity = 0; // Initial angular velocity
   var angularAcceleration = 0; // Angular acceleration in radians per second squared
   var radiusCircular = 0.01; // Radius of the circular path
-  var isMovingParabola = false, isMovingFreeFall = false, isMovingCircular = false; // Movement status
+  var isMovingParabola = false,
+    isMovingFreeFall = false,
+    isMovingCircular = false, // Movement status
+    isMovingGLBB = false; // Movement status
   var time = 0; // Time tracker
 
   // Function to read input values for speed and acceleration
@@ -261,16 +280,25 @@ var perspectiveExample = function () {
     var inputAccelerationX = parseFloat(
       document.getElementById("accelerationInput").value
     );
-    var inputLaunchAngle = parseFloat(document.getElementById("angleInput").value);
-    var inputGravity = parseFloat(document.getElementById("gravityInput").value);
-    var inputAngVel = parseFloat(document.getElementById("angularVelInput").value);
-    var inputAngAccel = parseFloat(document.getElementById("angularAccelInput").value);
+    var inputLaunchAngle = parseFloat(
+      document.getElementById("angleInput").value
+    );
+    var inputGravity = parseFloat(
+      document.getElementById("gravityInput").value
+    );
+    var inputAngVel = parseFloat(
+      document.getElementById("angularVelInput").value
+    );
+    var inputAngAccel = parseFloat(
+      document.getElementById("angularAccelInput").value
+    );
     var inputRadius = parseFloat(document.getElementById("radiusInput").value);
 
     if (!isNaN(inputSpeed)) {
       speed = inputSpeed;
     }
-    if (!isNaN(inputSpeedY)) {   // Add this block to handle speedYInput
+    if (!isNaN(inputSpeedY)) {
+      // Add this block to handle speedYInput
       speedY = inputSpeedY;
     } else {
       var angleInRadians = (launchAngle * Math.PI) / 180;
@@ -342,6 +370,25 @@ var perspectiveExample = function () {
     speed = 0; // Reset time
   }
 
+  function startGLBB() {
+    isMovingGLBB = true;
+    time = 0; // Reset time
+    accelerationX = 0.1;
+    startPositionX = 0; // Reset X position
+    startPositionY = 0;
+    speedX = 0;
+    V0 = 0;
+    updateParameters(); // Ensure the parameters are set when the animation
+  }
+
+  function resetGLBB() {
+    isMovingGLBB = false;
+    startPositionX = 0; // Reset X position
+    startPositionY = 0; // Reset Y position
+    speedX = 0; // Reset time
+    accelerationX = 0; // Reset time
+  }
+
   function updateCubePosition() {
     if (isMovingParabola) {
       // Update time
@@ -369,8 +416,7 @@ var perspectiveExample = function () {
         speedY = 0; // Stop vertical movement
         isMovingParabola = false; // Stop the animation when it hits the ground
       }
-    } 
-    else if (isMovingFreeFall) {
+    } else if (isMovingFreeFall) {
       // Perbarui kecepatan berdasarkan gravitasi
       speed += gravity * timeStep;
 
@@ -384,8 +430,7 @@ var perspectiveExample = function () {
         speed = 0;
         isMovingFreeFall = false; // Hentikan pergerakan
       }
-    }
-    else if (isMovingCircular) {
+    } else if (isMovingCircular) {
       // Update time
       time += timeStep;
 
@@ -398,6 +443,31 @@ var perspectiveExample = function () {
       // Convert polar coordinates (circular motion) to Cartesian coordinates
       startPositionX = radiusCircular * Math.cos(angularPosition);
       startPositionY = radiusCircular * Math.sin(angularPosition);
+    } else if (isMovingGLBB) {
+      // Update time
+      time += timeStep;
+
+      // Calculate new position based on V0 and acceleration (GLBB formula)
+      // GLBB: s = v0 * t + 0.5 * a * t^2
+      startPositionX += speedX * time + 0.5 * accelerationX * Math.pow(time, 2);
+
+      // Update velocity based on acceleration
+      speedX += accelerationX * timeStep;
+
+      // Check if it reaches the boundary and wrap around horizontally
+      if (startPositionX >= rightLimit) {
+        startPositionX = 2.1; // Wrap to left side
+        isMovingGLBB = false; // Stop the animation
+      } else if (startPositionX < leftLimit) {
+        startPositionX = rightLimit; // Wrap to right side
+      }
+
+      // Stop the motion if the cube reaches a specified boundary (optional)
+      if (startPositionX <= groundLevel) {
+        startPositionX = groundLevel;
+        speedX = 0; // Stop horizontal movement
+        isMovingGLBB = false; // Stop the animation
+      }
     }
 
     // Create translation matrix for moving the cube in both X and Y axes
@@ -428,4 +498,4 @@ var perspectiveExample = function () {
 
   init();
 };
-perspectiveExample();
+main();

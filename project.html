@@ -7,17 +7,18 @@
     <title>WebGL Canvas with 4 Columns</title>
   </head>
   <body>
-
     <!-- Kanvas WebGL -->
     <canvas id="gl-canvas"></canvas>
 
-    <br>
+    <br />
+
     <div>
       <button id="cubeButton">Cube</button>
       <button id="dodecahedronButton">Dodecahedron</button>
     </div>
     <!-- Grid dengan 4 kolom di bawah kanvas -->
     <div class="grid-container">
+      <!-- Kolom 1: GERAK JATUH BEBAS -->
       <div class="grid-item controls">
         <h1 class="center-text" id="freeFall">GERAK JATUH BEBAS</h1>
         <button id="startFreeFall">Start</button>
@@ -30,9 +31,33 @@
           step="0.1"
           onchange="updateParameters()"
         />
-      </div> <!-- Kolom 1 kosong -->
-      <div class="grid-item"></div> <!-- Kolom 2 kosong -->
-      
+      </div>
+
+      <!-- Kolom 2: GLBB -->
+      <div class="grid-item controls">
+        <h1 class="center-text" id="GLBB">GLB & GLBB</h1>
+        <button id="startGLBB">Start</button>
+        <button id="resetGLBB">Reset</button>
+
+        <label for="speedInput">Initial Speed X (v0x):</label>
+        <input
+          type="number"
+          id="speedInput"
+          value="10"
+          step="0.01"
+          onchange="updateParameters()"
+        />
+
+        <label for="accelerationInput">Acceleration X (a):</label>
+        <input
+          type="number"
+          id="accelerationInput"
+          value="1"
+          step="0.01"
+          onchange="updateParameters()"
+        />
+      </div>
+
       <!-- Kolom 3: Kontrol input dan tombol -->
       <div class="grid-item controls">
         <h1 class="center-text" id="parabola">PARABOLA</h1>
@@ -82,9 +107,9 @@
           step="1"
           onchange="updateParameters()"
         />
-
       </div>
 
+      <!-- Kolom 4: Gerak Melingkar -->
       <div class="grid-item controls">
         <h1 class="center-text" id="circular">GMB & GMBB</h1>
         <button id="startCircular">Start</button>
@@ -115,7 +140,7 @@
           step="0.1"
           onchange="updateParameters()"
         />
-      </div> <!-- Kolom 4 kosong -->
+      </div>
     </div>
 
     <!-- Shader for WebGL -->
@@ -151,6 +176,5 @@
     <script src="initShaders.js"></script>
     <script src="MVnew.js"></script>
     <script src="cube.js"></script>
-
   </body>
 </html>
