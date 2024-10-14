@@ -329,6 +329,7 @@ function squareBase(a, b, c, d, colorIndex) {
     document.getElementById("circular").onclick = resetCircular;
     document.getElementById("startCircular").onclick = startCircular;
     document.getElementById("resetCircular").onclick = resetCircular;
+    document.getElementById("stopCircular").onclick = stopCircular;
 
     document.getElementById("GLBB").onclick = resetGLBB;
     document.getElementById("startGLBB").onclick = startGLBB;
@@ -483,6 +484,10 @@ function squareBase(a, b, c, d, colorIndex) {
     startPositionX = 0; // Reset X position
     startPositionY = 0; // Reset Y position
     time = 0; // Reset time
+  }
+
+  function stopCircular() {
+    isMovingCircular = false;
   }
 
   function startFreeFall() {
