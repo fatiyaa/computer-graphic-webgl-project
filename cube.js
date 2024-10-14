@@ -46,16 +46,12 @@ var main = function () {
     vec4(-A / 10, 0, -B / 10, 1.0),
   ];
 
-  var vertexColors = [
-    vec4(0.0, 0.0, 0.0, 1.0), // black
-    vec4(1.0, 0.0, 0.0, 1.0), // red
-    vec4(1.0, 1.0, 0.0, 1.0), // yellow
-    vec4(0.0, 1.0, 0.0, 1.0), // green
-    vec4(0.0, 0.0, 1.0, 1.0), // blue
-    vec4(1.0, 0.0, 1.0, 1.0), // magenta
-    vec4(0.0, 1.0, 1.0, 1.0), // cyan
-    vec4(1.0, 1.0, 1.0, 1.0), // white
-  ];
+  var tetraVertices = [
+    vec4(0.0, 0.2, -0.1, 1.0), // Vertex bottom
+    vec4(-0.2, -0.1, -0.1, 1.0), // Vertex bottom
+    vec4(0.2, -0.1, -0.1, 1.0), // Vertex bottom
+    vec4(0.0, 0.0, 0.2, 1.0), // Vertex bottom
+  ]
 
   var dodeVertexColors = [
     vec4(0.0, 0.0, 0.0, 1.0), // black
@@ -95,17 +91,17 @@ var main = function () {
 
   function quad(a, b, c, d) {
     positionsArray.push(vertices[a]);
-    colorsArray.push(vertexColors[a]);
+    colorsArray.push(dodeVertexColors[a]);
     positionsArray.push(vertices[b]);
-    colorsArray.push(vertexColors[a]);
+    colorsArray.push(dodeVertexColors[a]);
     positionsArray.push(vertices[c]);
-    colorsArray.push(vertexColors[a]);
+    colorsArray.push(dodeVertexColors[a]);
     positionsArray.push(vertices[a]);
-    colorsArray.push(vertexColors[a]);
+    colorsArray.push(dodeVertexColors[a]);
     positionsArray.push(vertices[c]);
-    colorsArray.push(vertexColors[a]);
+    colorsArray.push(dodeVertexColors[a]);
     positionsArray.push(vertices[d]);
-    colorsArray.push(vertexColors[a]);
+    colorsArray.push(dodeVertexColors[a]);
   }
 
   function pentagon(a, b, c, d, e, colorIndex) {
@@ -129,6 +125,15 @@ var main = function () {
     positionsArray.push(dodeVertices[d]);
     colorsArray.push(dodeVertexColors[colorIndex]);
     positionsArray.push(dodeVertices[e]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+  }
+
+  function triangle(a, b, c, colorIndex) {
+    positionsArray.push(tetraVertices[a]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+    positionsArray.push(tetraVertices[b]);
+    colorsArray.push(dodeVertexColors[colorIndex]);
+    positionsArray.push(tetraVertices[c]);
     colorsArray.push(dodeVertexColors[colorIndex]);
   }
 
@@ -157,6 +162,13 @@ var main = function () {
     // 3, 17, 16, 2, 13 green sbelah cyan
   }
 
+  function colorTetrahedron() {
+    triangle(0, 1, 2, 0);
+    triangle(0, 2, 3, 1);
+    triangle(0, 3, 1, 2);
+    triangle(2, 1, 3, 3);
+  }
+
   function init() {
     canvas = document.getElementById("gl-canvas");
 
@@ -183,6 +195,8 @@ var main = function () {
       colorCube();
     } else if (currentObject === "dodecahedron") {
       colorDodecahedron();
+    } else if (currentObject === "tetrahedron") {
+      colorTetrahedron();
     }
 
     var cBuffer = gl.createBuffer();
@@ -220,6 +234,14 @@ var main = function () {
       positionsArray = []; // Clear positions and colors
       colorsArray = [];
       numPositions = 108;
+
+      init(); // Re-initialize with dodecahedron
+    };
+    document.getElementById("tetrahedronButton").onclick = function () {
+      currentObject = "tetrahedron";
+      positionsArray = []; // Clear positions and colors
+      colorsArray = [];
+      numPositions = 12;
 
       init(); // Re-initialize with dodecahedron
     };
@@ -275,11 +297,13 @@ var main = function () {
   // Variables for controlling cube movement based on GLBB
   var startPositionX = -0; // Adjust to start near the left
   var startPositionY = -0; // Cube bottom touches canvas bottom
-  var speed = 0; // Initial velocity
+  // var speed = 0; // Initial velocity
   var speedX = 0; // Velocity in X direction
+  var speedXGLBB = 0; // Velocity in X direction
   var speedY = 0; // Velocity in Y direction
   var launchAngle = 45; // Launch angle (θ)
   var gravity = -9.8; // Gravity in Y direction
+  var gravityFF = -9.8; // Gravity in Y direction
   var accelerationX = 0; // Acceleration in X direction
   var timeStep = 0.005; // Time step in seconds
   var rightLimit = 2.5; // Right boundary near the right edge
@@ -297,7 +321,8 @@ var main = function () {
 
   // Function to read input values for speed and acceleration
   function updateParameters() {
-    var inputSpeed = parseFloat(document.getElementById("speedInput").value);
+    var inputSpeedX = parseFloat(document.getElementById("speedXInput").value);
+    var inputSpeedXGLBB = parseFloat(document.getElementById("speedXInputGLBB").value);
     var inputSpeedY = parseFloat(document.getElementById("speedYInput").value);
     var inputAccelerationX = parseFloat(
       document.getElementById("accelerationInput").value
@@ -308,6 +333,9 @@ var main = function () {
     var inputGravity = parseFloat(
       document.getElementById("gravityInput").value
     );
+    var inputGravityFF = parseFloat(
+      document.getElementById("gravityInputFF").value
+    );
     var inputAngVel = parseFloat(
       document.getElementById("angularVelInput").value
     );
@@ -316,16 +344,20 @@ var main = function () {
     );
     var inputRadius = parseFloat(document.getElementById("radiusInput").value);
 
-    if (!isNaN(inputSpeed)) {
-      speed = inputSpeed;
+    if (!isNaN(inputSpeedX)) {
+      speedX = inputSpeedX;
+    }
+    if (!isNaN(inputSpeedXGLBB)) {
+      speedXGLBB = inputSpeedXGLBB;
     }
     if (!isNaN(inputSpeedY)) {
       // Add this block to handle speedYInput
       speedY = inputSpeedY;
-    } else {
-      var angleInRadians = (launchAngle * Math.PI) / 180;
-      speedY = speed * Math.sin(angleInRadians);
-    }
+    } 
+    // else {
+    //   var angleInRadians = (launchAngle * Math.PI) / 180;
+    //   speedY = speed * Math.sin(angleInRadians);
+    // }
     if (!isNaN(inputAccelerationX)) {
       accelerationX = inputAccelerationX;
     }
@@ -334,6 +366,9 @@ var main = function () {
     }
     if (!isNaN(inputGravity)) {
       gravity = inputGravity;
+    }
+    if (!isNaN(inputGravityFF)) {
+      gravityFF = inputGravityFF;
     }
     if (!isNaN(inputAngVel)) {
       angularVelocity = inputAngVel;
@@ -346,15 +381,15 @@ var main = function () {
     }
 
     // Convert angle to radians and compute initial velocity components
-    var angleInRadians = (launchAngle * Math.PI) / 180;
-    speedX = speed * Math.cos(angleInRadians);
+    // var angleInRadians = (launchAngle * Math.PI) / 180;
+    // speedX = speed * Math.cos(angleInRadians);
   }
 
   function startParabola() {
     // resetParabola();
-    isMovingParabola = true;
-    time = 0; // Reset time
     updateParameters(); // Ensure the parameters are set when the animation starts
+    time = 0; // Reset time
+    isMovingParabola = true;
   }
 
   function resetParabola() {
@@ -366,9 +401,9 @@ var main = function () {
 
   function startCircular() {
     // resetParabola();
-    isMovingCircular = true;
-    time = 0; // Reset time
     updateParameters(); // Ensure the parameters are set when the animation starts
+    time = 0; // Reset time
+    isMovingCircular = true;
   }
 
   function resetCircular() {
@@ -380,35 +415,29 @@ var main = function () {
 
   function startFreeFall() {
     // resetParabola();
-    isMovingFreeFall = true;
     updateParameters(); // Ensure the parameters are set when the animation starts
-    speed = 0; // Reset time
+    speedY = 0; // Reset time
+    isMovingFreeFall = true;
   }
 
   function resetFreeFall() {
     isMovingFreeFall = false;
     startPositionX = -1.5; // Reset X position
     startPositionY = 0.65; // Reset Y position
-    speed = 0; // Reset time
+    speedY = 0; // Reset time
   }
 
   function startGLBB() {
-    isMovingGLBB = true;
-    time = 0; // Reset time
-    accelerationX = 0.1;
-    startPositionX = 0; // Reset X position
-    startPositionY = 0;
-    speedX = 0;
-    V0 = 0;
     updateParameters(); // Ensure the parameters are set when the animation
+    time = 0; 
+    isMovingGLBB = true;
   }
 
   function resetGLBB() {
     isMovingGLBB = false;
     startPositionX = 0; // Reset X position
     startPositionY = 0; // Reset Y position
-    speedX = 0; // Reset time
-    accelerationX = 0; // Reset time
+    time = 0;
   }
 
   function updateCubePosition() {
@@ -439,28 +468,28 @@ var main = function () {
         isMovingParabola = false; // Stop the animation when it hits the ground
       }
     } else if (isMovingFreeFall) {
-      // Perbarui kecepatan berdasarkan gravitasi
-      speed += gravity * timeStep;
-
       // Perbarui posisi Y berdasarkan kecepatan
-      startPositionY += speed * timeStep;
+      startPositionY += speedY * timeStep;
+    
+      // Perbarui kecepatan berdasarkan gravitasi
+      speedY += gravityFF * timeStep;
 
       // Periksa apakah kubus sudah mencapai batas bawah
       if (startPositionY <= groundLevel) {
         // Set posisi di batas bawah dan hentikan pergerakan
         startPositionY = groundLevel;
-        speed = 0;
+        speedY = 0;
         isMovingFreeFall = false; // Hentikan pergerakan
       }
     } else if (isMovingCircular) {
       // Update time
       time += timeStep;
-
-      // Update angular velocity based on angular acceleration
-      angularVelocity += angularAcceleration * timeStep;
-
+      
       // Update angular position based on angular velocity
       angularPosition += angularVelocity * timeStep;
+      
+      // Update angular velocity based on angular acceleration
+      angularVelocity += angularAcceleration * timeStep;
 
       // Convert polar coordinates (circular motion) to Cartesian coordinates
       startPositionX = radiusCircular * Math.cos(angularPosition);
@@ -471,23 +500,17 @@ var main = function () {
 
       // Calculate new position based on V0 and acceleration (GLBB formula)
       // GLBB: s = v0 * t + 0.5 * a * t^2
-      startPositionX += speedX * time + 0.5 * accelerationX * Math.pow(time, 2);
+      startPositionX += speedXGLBB * time + 0.5 * accelerationX * Math.pow(time, 2);
 
       // Update velocity based on acceleration
-      speedX += accelerationX * timeStep;
+      speedXGLBB += accelerationX * timeStep;
 
       // Check if it reaches the boundary and wrap around horizontally
-      if (startPositionX >= rightLimit) {
+      if (startPositionX >= 2.1) {
         startPositionX = 2.1; // Wrap to left side
         isMovingGLBB = false; // Stop the animation
-      } else if (startPositionX < leftLimit) {
-        startPositionX = rightLimit; // Wrap to right side
-      }
-
-      // Stop the motion if the cube reaches a specified boundary (optional)
-      if (startPositionX <= groundLevel) {
-        startPositionX = groundLevel;
-        speedX = 0; // Stop horizontal movement
+      } else if (startPositionX <= -2.1) {
+        startPositionX = -2.1; // Wrap to right side
         isMovingGLBB = false; // Stop the animation
       }
     }
