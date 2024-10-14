@@ -54,14 +54,6 @@ var main = function () {
     vec4(-0.1, -0.1, -0.1, 1.0) // Base vertex 4
   ];
 
-  var pyramidVertices = [
-    vec4(0.0, 0.2, 0.0, 1.0), // Vertex top (apex)
-    vec4(-0.1, -0.1, 0.1, 1.0), // Base vertex 1
-    vec4(0.1, -0.1, 0.1, 1.0),  // Base vertex 2
-    vec4(0.1, -0.1, -0.1, 1.0), // Base vertex 3
-    vec4(-0.1, -0.1, -0.1, 1.0) // Base vertex 4
-  ];
-
   var tetraVertices = [
     vec4(0.0, 0.2, -0.1, 1.0), // Vertex bottom
     vec4(-0.2, -0.1, -0.1, 1.0), // Vertex bottom
@@ -91,7 +83,6 @@ var main = function () {
     vec4(1.0, 1.0, 0.0, 1.0), // Yellow
     vec4(1.0, 0.0, 1.0, 1.0)  // Magenta
   ];
-  
 
   var near = 0.1;
   var far = 10.0;
@@ -153,13 +144,13 @@ var main = function () {
     colorsArray.push(dodeVertexColors[colorIndex]);
   }
 
-  function triangle(a, b, c, colorIndex) {
+  function triangle(a, b, c, colorIndex, vertices) {
     // Membuat sisi segitiga dengan 3 titik
-    positionsArray.push(pyramidVertices[a]);
+    positionsArray.push(vertices[a]);
     colorsArray.push(pyramidVertexColors[colorIndex]);
-    positionsArray.push(pyramidVertices[b]);
+    positionsArray.push(vertices[b]);
     colorsArray.push(pyramidVertexColors[colorIndex]);
-    positionsArray.push(pyramidVertices[c]);
+    positionsArray.push(vertices[c]);
     colorsArray.push(pyramidVertexColors[colorIndex]);
 }
 
@@ -179,15 +170,6 @@ function squareBase(a, b, c, d, colorIndex) {
     positionsArray.push(pyramidVertices[d]);
     colorsArray.push(pyramidVertexColors[colorIndex]);
 }
-
-  function triangle(a, b, c, colorIndex) {
-    positionsArray.push(tetraVertices[a]);
-    colorsArray.push(dodeVertexColors[colorIndex]);
-    positionsArray.push(tetraVertices[b]);
-    colorsArray.push(dodeVertexColors[colorIndex]);
-    positionsArray.push(tetraVertices[c]);
-    colorsArray.push(dodeVertexColors[colorIndex]);
-  }
 
   function colorCube() {
     quad(1, 0, 3, 2);
@@ -216,10 +198,10 @@ function squareBase(a, b, c, d, colorIndex) {
 
   function colorPyramid() {
     // Membuat sisi-sisi piramida dengan `triangle`
-    triangle(0, 1, 2, 1); // Sisi merah
-    triangle(0, 2, 3, 2); // Sisi kuning
-    triangle(0, 3, 4, 3); // Sisi hijau
-    triangle(0, 4, 1, 4); // Sisi biru
+    triangle(0, 1, 2, 1, pyramidVertices); // Sisi merah
+    triangle(0, 2, 3, 2, pyramidVertices); // Sisi kuning
+    triangle(0, 3, 4, 3, pyramidVertices); // Sisi hijau
+    triangle(0, 4, 1, 4, pyramidVertices); // Sisi biru
 
     // Membuat dasar piramida dengan `squareBase`
     squareBase(1, 2, 3, 4, 0); // Dasar hitam
@@ -227,10 +209,10 @@ function squareBase(a, b, c, d, colorIndex) {
 
 
   function colorTetrahedron() {
-    triangle(0, 1, 2, 0);
-    triangle(0, 2, 3, 1);
-    triangle(0, 3, 1, 2);
-    triangle(2, 1, 3, 3);
+    triangle(0, 1, 2, 0, tetraVertices);
+    triangle(0, 2, 3, 1, tetraVertices);
+    triangle(0, 3, 1, 2, tetraVertices);
+    triangle(2, 1, 3, 3, tetraVertices);
   }
 
   function init() {
