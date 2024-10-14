@@ -49,9 +49,9 @@ var main = function () {
   var pyramidVertices = [
     vec4(0.0, 0.2, 0.0, 1.0), // Vertex top (apex)
     vec4(-0.1, -0.1, 0.1, 1.0), // Base vertex 1
-    vec4(0.1, -0.1, 0.1, 1.0),  // Base vertex 2
+    vec4(0.1, -0.1, 0.1, 1.0), // Base vertex 2
     vec4(0.1, -0.1, -0.1, 1.0), // Base vertex 3
-    vec4(-0.1, -0.1, -0.1, 1.0) // Base vertex 4
+    vec4(-0.1, -0.1, -0.1, 1.0), // Base vertex 4
   ];
 
   var tetraVertices = [
@@ -59,7 +59,7 @@ var main = function () {
     vec4(-0.2, -0.1, -0.1, 1.0), // Vertex bottom
     vec4(0.2, -0.1, -0.1, 1.0), // Vertex bottom
     vec4(0.0, 0.0, 0.2, 1.0), // Vertex bottom
-  ]
+  ];
 
   var dodeVertexColors = [
     vec4(0.0, 0.0, 0.0, 1.0), // black
@@ -81,7 +81,27 @@ var main = function () {
     vec4(0.0, 1.0, 0.0, 1.0), // Green
     vec4(0.0, 0.0, 1.0, 1.0), // Blue
     vec4(1.0, 1.0, 0.0, 1.0), // Yellow
-    vec4(1.0, 0.0, 1.0, 1.0)  // Magenta
+    vec4(1.0, 0.0, 1.0, 1.0), // Magenta
+  ];
+
+  var octaVertices = [
+    vec4(0.0, 0.2, 0.0, 1.0), // Top vertex
+    vec4(0.1, 0.0, 0.1, 1.0), // Front-right
+    vec4(0.1, 0.0, -0.1, 1.0), // Back-right
+    vec4(-0.1, 0.0, -0.1, 1.0), // Back-left
+    vec4(-0.1, 0.0, 0.1, 1.0), // Front-left
+    vec4(0.0, -0.2, 0.0, 1.0), // Bottom vertex
+  ];
+
+  var octahedronColors = [
+    vec4(1.0, 0.0, 0.0, 1.0), // Red
+    vec4(0.0, 1.0, 0.0, 1.0), // Green
+    vec4(0.0, 0.0, 1.0, 1.0), // Blue
+    vec4(1.0, 1.0, 0.0, 1.0), // Yellow
+    vec4(1.0, 0.0, 1.0, 1.0), // Magenta
+    vec4(0.0, 1.0, 1.0, 1.0), // Cyan
+    vec4(0.5, 0.5, 0.5, 1.0), // Gray
+    vec4(1.0, 0.5, 0.0, 1.0), // Orange
   ];
 
   var near = 0.1;
@@ -152,9 +172,9 @@ var main = function () {
     colorsArray.push(pyramidVertexColors[colorIndex]);
     positionsArray.push(vertices[c]);
     colorsArray.push(pyramidVertexColors[colorIndex]);
-}
+  }
 
-function squareBase(a, b, c, d, colorIndex) {
+  function squareBase(a, b, c, d, colorIndex) {
     // Membuat dasar persegi dengan dua segitiga
     positionsArray.push(pyramidVertices[a]);
     colorsArray.push(pyramidVertexColors[colorIndex]);
@@ -169,7 +189,18 @@ function squareBase(a, b, c, d, colorIndex) {
     colorsArray.push(pyramidVertexColors[colorIndex]);
     positionsArray.push(pyramidVertices[d]);
     colorsArray.push(pyramidVertexColors[colorIndex]);
-}
+  }
+
+  function triangleOcta(a, b, c, colorIndex) {
+    positionsArray.push(octaVertices[a]);
+    colorsArray.push(octahedronColors[colorIndex]);
+
+    positionsArray.push(octaVertices[b]);
+    colorsArray.push(octahedronColors[colorIndex]);
+
+    positionsArray.push(octaVertices[c]);
+    colorsArray.push(octahedronColors[colorIndex]);
+  }
 
   function colorCube() {
     quad(1, 0, 3, 2);
@@ -196,6 +227,20 @@ function squareBase(a, b, c, d, colorIndex) {
     // 3, 17, 16, 2, 13 green sbelah cyan
   }
 
+  function colorOctahedron() {
+    // Upper faces
+    triangleOcta(0, 1, 2, 0);
+    triangleOcta(0, 2, 3, 1);
+    triangleOcta(0, 3, 4, 2);
+    triangleOcta(0, 4, 1, 3);
+
+    // Lower faces
+    triangleOcta(5, 1, 2, 4);
+    triangleOcta(5, 2, 3, 5);
+    triangleOcta(5, 3, 4, 6);
+    triangleOcta(5, 4, 1, 7);
+  }
+
   function colorPyramid() {
     // Membuat sisi-sisi piramida dengan `triangle`
     triangle(0, 1, 2, 1, pyramidVertices); // Sisi merah
@@ -205,14 +250,30 @@ function squareBase(a, b, c, d, colorIndex) {
 
     // Membuat dasar piramida dengan `squareBase`
     squareBase(1, 2, 3, 4, 0); // Dasar hitam
-}
-
+  }
 
   function colorTetrahedron() {
     triangle(0, 1, 2, 0, tetraVertices);
     triangle(0, 2, 3, 1, tetraVertices);
     triangle(0, 3, 1, 2, tetraVertices);
     triangle(2, 1, 3, 3, tetraVertices);
+  }
+
+  function squareBase(a, b, c, d, colorIndex) {
+    // Membuat dasar persegi dengan dua segitiga
+    positionsArray.push(pyramidVertices[a]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[b]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[c]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+
+    positionsArray.push(pyramidVertices[a]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[c]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[d]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
   }
 
   function init() {
@@ -245,6 +306,8 @@ function squareBase(a, b, c, d, colorIndex) {
       colorPyramid();
     } else if (currentObject === "tetrahedron") {
       colorTetrahedron();
+    } else if (currentObject === "octahedron") {
+      colorOctahedron();
     }
 
     var cBuffer = gl.createBuffer();
@@ -308,7 +371,7 @@ function squareBase(a, b, c, d, colorIndex) {
       numPositions = 18;
 
       init(); // Re-initialize with pyramid
-    }
+    };
     document.getElementById("tetrahedronButton").onclick = function () {
       currentObject = "tetrahedron";
       positionsArray = []; // Clear positions and colors
@@ -316,6 +379,15 @@ function squareBase(a, b, c, d, colorIndex) {
       numPositions = 12;
 
       init(); // Re-initialize with dodecahedron
+    };
+
+    document.getElementById("octahedronButton").onclick = function () {
+      currentObject = "octahedron";
+      positionsArray = []; // Clear positions and colors
+      colorsArray = [];
+      numPositions = 24; // 8 triangles for the octahedron
+
+      init(); // Re-initialize with octahedron
     };
 
     document.getElementById("parabola").onclick = resetParabola;
@@ -395,7 +467,9 @@ function squareBase(a, b, c, d, colorIndex) {
   // Function to read input values for speed and acceleration
   function updateParameters() {
     var inputSpeedX = parseFloat(document.getElementById("speedXInput").value);
-    var inputSpeedXGLBB = parseFloat(document.getElementById("speedXInputGLBB").value);
+    var inputSpeedXGLBB = parseFloat(
+      document.getElementById("speedXInputGLBB").value
+    );
     var inputSpeedY = parseFloat(document.getElementById("speedYInput").value);
     var inputAccelerationX = parseFloat(
       document.getElementById("accelerationInput").value
@@ -426,7 +500,7 @@ function squareBase(a, b, c, d, colorIndex) {
     if (!isNaN(inputSpeedY)) {
       // Add this block to handle speedYInput
       speedY = inputSpeedY;
-    } 
+    }
     // else {
     //   var angleInRadians = (launchAngle * Math.PI) / 180;
     //   speedY = speed * Math.sin(angleInRadians);
@@ -506,7 +580,7 @@ function squareBase(a, b, c, d, colorIndex) {
 
   function startGLBB() {
     updateParameters(); // Ensure the parameters are set when the animation
-    time = 0; 
+    time = 0;
     isMovingGLBB = true;
   }
 
@@ -547,7 +621,7 @@ function squareBase(a, b, c, d, colorIndex) {
     } else if (isMovingFreeFall) {
       // Perbarui posisi Y berdasarkan kecepatan
       startPositionY += speedY * timeStep;
-    
+
       // Perbarui kecepatan berdasarkan gravitasi
       speedY += gravityFF * timeStep;
 
@@ -561,10 +635,10 @@ function squareBase(a, b, c, d, colorIndex) {
     } else if (isMovingCircular) {
       // Update time
       time += timeStep;
-      
+
       // Update angular position based on angular velocity
       angularPosition += angularVelocity * timeStep;
-      
+
       // Update angular velocity based on angular acceleration
       angularVelocity += angularAcceleration * timeStep;
 
@@ -577,7 +651,8 @@ function squareBase(a, b, c, d, colorIndex) {
 
       // Calculate new position based on V0 and acceleration (GLBB formula)
       // GLBB: s = v0 * t + 0.5 * a * t^2
-      startPositionX += speedXGLBB * time + 0.5 * accelerationX * Math.pow(time, 2);
+      startPositionX +=
+        speedXGLBB * time + 0.5 * accelerationX * Math.pow(time, 2);
 
       // Update velocity based on acceleration
       speedXGLBB += accelerationX * timeStep;
