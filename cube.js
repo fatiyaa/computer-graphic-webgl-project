@@ -46,6 +46,22 @@ var main = function () {
     vec4(-A / 10, 0, -B / 10, 1.0),
   ];
 
+  var pyramidVertices = [
+    vec4(0.0, 0.2, 0.0, 1.0), // Vertex top (apex)
+    vec4(-0.1, -0.1, 0.1, 1.0), // Base vertex 1
+    vec4(0.1, -0.1, 0.1, 1.0),  // Base vertex 2
+    vec4(0.1, -0.1, -0.1, 1.0), // Base vertex 3
+    vec4(-0.1, -0.1, -0.1, 1.0) // Base vertex 4
+  ];
+
+  var pyramidVertices = [
+    vec4(0.0, 0.2, 0.0, 1.0), // Vertex top (apex)
+    vec4(-0.1, -0.1, 0.1, 1.0), // Base vertex 1
+    vec4(0.1, -0.1, 0.1, 1.0),  // Base vertex 2
+    vec4(0.1, -0.1, -0.1, 1.0), // Base vertex 3
+    vec4(-0.1, -0.1, -0.1, 1.0) // Base vertex 4
+  ];
+
   var tetraVertices = [
     vec4(0.0, 0.2, -0.1, 1.0), // Vertex bottom
     vec4(-0.2, -0.1, -0.1, 1.0), // Vertex bottom
@@ -67,6 +83,15 @@ var main = function () {
     vec4(0.0, 0.5, 0.0, 1.0), // green 2
     vec4(0.0, 0.0, 0.5, 1.0), // blue 2
   ];
+
+  var pyramidVertexColors = [
+    vec4(1.0, 0.0, 0.0, 1.0), // Red (apex)
+    vec4(0.0, 1.0, 0.0, 1.0), // Green
+    vec4(0.0, 0.0, 1.0, 1.0), // Blue
+    vec4(1.0, 1.0, 0.0, 1.0), // Yellow
+    vec4(1.0, 0.0, 1.0, 1.0)  // Magenta
+  ];
+  
 
   var near = 0.1;
   var far = 10.0;
@@ -129,6 +154,33 @@ var main = function () {
   }
 
   function triangle(a, b, c, colorIndex) {
+    // Membuat sisi segitiga dengan 3 titik
+    positionsArray.push(pyramidVertices[a]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[b]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[c]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+}
+
+function squareBase(a, b, c, d, colorIndex) {
+    // Membuat dasar persegi dengan dua segitiga
+    positionsArray.push(pyramidVertices[a]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[b]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[c]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+
+    positionsArray.push(pyramidVertices[a]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[c]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+    positionsArray.push(pyramidVertices[d]);
+    colorsArray.push(pyramidVertexColors[colorIndex]);
+}
+
+  function triangle(a, b, c, colorIndex) {
     positionsArray.push(tetraVertices[a]);
     colorsArray.push(dodeVertexColors[colorIndex]);
     positionsArray.push(tetraVertices[b]);
@@ -161,6 +213,18 @@ var main = function () {
     pentagon(7, 11, 9, 5, 19, 11); // blue`2
     // 3, 17, 16, 2, 13 green sbelah cyan
   }
+
+  function colorPyramid() {
+    // Membuat sisi-sisi piramida dengan `triangle`
+    triangle(0, 1, 2, 1); // Sisi merah
+    triangle(0, 2, 3, 2); // Sisi kuning
+    triangle(0, 3, 4, 3); // Sisi hijau
+    triangle(0, 4, 1, 4); // Sisi biru
+
+    // Membuat dasar piramida dengan `squareBase`
+    squareBase(1, 2, 3, 4, 0); // Dasar hitam
+}
+
 
   function colorTetrahedron() {
     triangle(0, 1, 2, 0);
@@ -195,6 +259,8 @@ var main = function () {
       colorCube();
     } else if (currentObject === "dodecahedron") {
       colorDodecahedron();
+    } else if (currentObject === "pyramid") {
+      colorPyramid();
     } else if (currentObject === "tetrahedron") {
       colorTetrahedron();
     }
@@ -221,6 +287,21 @@ var main = function () {
     window.addEventListener("keydown", handleKeyDown);
 
     // Add event listeners for buttons
+    document.getElementById("resetCameraView").onclick = function () {
+      near = 0.1;
+      far = 10.0;
+      radius = 2.0;
+      theta = 0.0;
+      phi = 0.0;
+      dr = (5.0 * Math.PI) / 180.0;
+
+      fovy = 45.0; // Field of view in the y-direction
+      aspect;
+
+      cameraSpeed = 0.05;
+      fovSpeed = 1.0;
+      init();
+    };
     document.getElementById("cubeButton").onclick = function () {
       currentObject = "cube";
       positionsArray = []; // Clear positions and colors
@@ -237,6 +318,15 @@ var main = function () {
 
       init(); // Re-initialize with dodecahedron
     };
+
+    document.getElementById("pyramidButton").onclick = function () {
+      currentObject = "pyramid";
+      positionsArray = []; // Clear positions and colors
+      colorsArray = [];
+      numPositions = 18;
+
+      init(); // Re-initialize with pyramid
+    }
     document.getElementById("tetrahedronButton").onclick = function () {
       currentObject = "tetrahedron";
       positionsArray = []; // Clear positions and colors
