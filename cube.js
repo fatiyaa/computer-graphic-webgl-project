@@ -593,6 +593,13 @@ var main = function () {
 
   function updateCubePosition() {
     if (isMovingParabola) {
+      // Convert launch angle to radians
+      var angleInRadians = (launchAngle * Math.PI) / 180;
+      var initialSpeed = Math.sqrt(speedX * speedX + speedY * speedY);
+      // Calculate initial velocity components
+      speedX = initialSpeed * Math.cos(angleInRadians); // Horizontal component
+      speedY = initialSpeed * Math.sin(angleInRadians); // Vertical component
+
       // Update time
       time += timeStep;
 
