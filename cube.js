@@ -207,6 +207,21 @@ var main = function () {
     window.addEventListener("keydown", handleKeyDown);
 
     // Add event listeners for buttons
+    document.getElementById("resetCameraView").onclick = function () {
+      near = 0.1;
+      far = 10.0;
+      radius = 2.0;
+      theta = 0.0;
+      phi = 0.0;
+      dr = (5.0 * Math.PI) / 180.0;
+
+      fovy = 45.0; // Field of view in the y-direction
+      aspect;
+
+      cameraSpeed = 0.05;
+      fovSpeed = 1.0;
+      init();
+    };
     document.getElementById("cubeButton").onclick = function () {
       currentObject = "cube";
       positionsArray = []; // Clear positions and colors
